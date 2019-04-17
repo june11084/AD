@@ -1,0 +1,13 @@
+\frametitle{Bayesian Dark Knowledge}
+The detailed algorithm:
+\begin{lstlisting}[mathescape=true]
+for t = 1 to T do:
+ //train teacher with SGLD
+ sample minibatch S of size M in D
+ sample $z_t \sim N(0, \eta_t I)$
+ update $\theta_{t+1} = \theta_t + \frac{\eta_t}{2}(\nabla_\theta \log p(\theta |\lambda) + \frac{N}{M} \sum_{(x,y)\in S} \log p(y|x,\theta)) + z_t$
+ //train student using SGD
+ samle D' of size M close to D
+ update $w_{t+1} = w_t - \rho_t(\frac{1}{M}\sum_{x\in D'} \nabla_w \hat{\mathcal{L}}(w,\theta_{t+1}|x') + \gamma w_t)$
+\end{lstlisting}
+

@@ -1,0 +1,24 @@
+\BOOKMARK [2][]{Outline0.1}{Deep Anomaly Detection \(DAD\) - A Brief Overview}{}% 1
+\BOOKMARK [3][]{Outline0.1.1.4}{Unsupervised DAD}{Outline0.1}% 2
+\BOOKMARK [3][]{Outline0.1.2.5}{Semi-Supervised DAD}{Outline0.1}% 3
+\BOOKMARK [3][]{Outline0.1.3.6}{Supervised DAD}{Outline0.1}% 4
+\BOOKMARK [3][]{Outline0.1.4.7}{The Importance of DL Model Uncertainty Quantification}{Outline0.1}% 5
+\BOOKMARK [2][]{Outline0.2}{Literature Review of DAD Model Predictive Uncertainty}{}% 6
+\BOOKMARK [3][]{Outline0.2.1.9}{Dropout as Bayesian Approximation}{Outline0.2}% 7
+\BOOKMARK [3][]{Outline0.2.2.11}{Dropout Distillation}{Outline0.2}% 8
+\BOOKMARK [3][]{Outline0.2.3.12}{Var Output, Adv Training and Ensembles}{Outline0.2}% 9
+\BOOKMARK [3][]{Outline0.2.4.13}{Bayesian Dark Knowledge}{Outline0.2}% 10
+\BOOKMARK [2][]{Outline0.3}{Review of Conditional VAE}{}% 11
+\BOOKMARK [3][]{Outline0.3.1.18}{Original CVAE}{Outline0.3}% 12
+\BOOKMARK [3][]{Outline0.3.2.20}{Relayr's Solution}{Outline0.3}% 13
+\BOOKMARK [3][]{Outline0.3.3.23}{CVAE for Anomaly Detection and Feature Recon}{Outline0.3}% 14
+\BOOKMARK [3][]{Outline0.3.4.25}{VAE with Anomaly Prior for Anomaly Detection}{Outline0.3}% 15
+\BOOKMARK [2][]{Outline0.4}{Empirical Study of Anomaly detection}{}% 16
+\BOOKMARK [3][]{Outline0.4.1.30}{VAE based Model}{Outline0.4}% 17
+\BOOKMARK [3][]{Outline0.4.2.33}{VAE with Lower Dimensional Latent Space}{Outline0.4}% 18
+\BOOKMARK [3][]{Outline0.4.3.36}{LSTM based Model}{Outline0.4}% 19
+\BOOKMARK [3][]{Outline0.4.4.39}{LSTM Comparison}{Outline0.4}% 20
+\BOOKMARK [3][]{Outline0.4.5.40}{VAE and LSTM based Models Comparison}{Outline0.4}% 21
+\BOOKMARK [2][]{Outline0.5}{Adversarial Attack on Sequence Data Model}{}% 22
+\BOOKMARK [3][]{Outline0.5.1.42}{Adversarial Attack on LSTM based Model}{Outline0.5}% 23
+\BOOKMARK [3][]{Outline0.5.2.44}{Adversarial Modification Distribution}{Outline0.5}% 24
