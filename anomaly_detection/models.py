@@ -15,12 +15,12 @@ from torch.nn import functional as F
 from torchvision.utils import save_image
 import numpy as np
 
-
 ngf = 64
 ndf = 64
 nc = 1
 
-class linear_VAE(nn.Module):
+# simple model for illustration purpose
+class linear_VAE(nn.Module): 
     def __init__(self, input_size):
         super(linear_VAE, self).__init__()
         self.input_size = input_size
@@ -49,7 +49,7 @@ class linear_VAE(nn.Module):
         z = self.reparameterize(mu, logvar)
         return self.decode(z), mu, logvar
 
-
+# VAE model with convolutional encoder/decoder
 class conv_VAE(nn.Module):
     def __init__(self, nz):
         super(conv_VAE, self).__init__()
@@ -145,10 +145,10 @@ class conv_VAE(nn.Module):
         # print("decoded", decoded.size())
         return decoded, mu, logvar
 
-
-class lstm_VAE(nn.Module):
+# LSTM model
+class LSTM(nn.Module):
     def __init__(self, input_dim, hidden_dim, batch_size, output_dim=1, num_layers=2):
-        super(lstm_VAE, self).__init__()
+        super(LSTM, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.batch_size = batch_size
@@ -175,3 +175,36 @@ class lstm_VAE(nn.Module):
         h = self.dropout(lstm_out)
         y_pred = self.linear(h.view(lstm_out.shape[0], -1))
         return y_pred
+
+# LSTM model with var output
+class LSTM_student(nn.Module):
+    def __init__(self, input_dim, hidden_dim, batch_size, output_dim=1, num_layers=2):
+        super(LSTM_student, self).__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.batch_size = batch_size
+        self.num_layers = num_layers
+        # Define the LSTM layer
+        self.lstm = nn.LSTM(self.input_dim, self.hidden_dim, self.num_layers, batch_first=True)
+        # Define the output layer, including uncertainty
+        self.mean = nn.Linear(self.hidden_dim, output_dim)
+        self.logvar = nn.Linear(self.hidden_dim, output_dim)
+
+    def init_hidden(self):
+        # This is what we'll initialise our hidden state as
+        return (torch.zeros(self.num_layers, self.batch_size, self.hidden_dim),
+                torch.zeros(self.num_layers, self.batch_size, self.hidden_dim))
+
+    def forward(self, input):
+        # Forward pass through LSTM layer
+        # shape of lstm_out: [input_size, batch_size, hidden_dim]
+        # shape of self.hidden: (a, b), where a and b both
+        # have shape (num_layers, batch_size, hidden_dim).
+        lstm_out, self.hidden = self.lstm(input)
+        # Only take the output from the final timetep
+        # Can pass on the entirety of lstm_out to the next layer if it is a seq2seq prediction
+        y_pred = self.mean(lstm_out.view(lstm_out.shape[0], -1))
+        y_logvar = self.logvar(lstm_out.view(lstm_out.shape[0], -1))
+        return y_pred, y_logvar
+
+

@@ -39,14 +39,15 @@ for node_id in node_ids:
     sorted_examples = examples.sort_values('unix_time', ascending=True) # sort based on the unix timestamp
 
     # round to 15 mins
-    starting_time = '2019-02-11 00:00:00'
+    # starting_time = '2018-10-01 00:00:00' # for node 54661
+    starting_time = '2019-01-20 00:00:00' # for freezer data
     k = 15
     avg_result = avg_every_k_minutes(sorted_examples, k, starting_time)
-    np.savetxt(save_path+str(node_id), avg_result)
+    np.savetxt(save_path+'/'+str(node_id), avg_result)
     plt.plot(avg_result)
     plt.title(str(node_id))
-    plt.savefig(save_path+str(node_id))
-    plt.show()
+    plt.savefig(save_path+'/figs/'+str(node_id)+'.png')
+    # plt.show()
     # plt.show()
     #
     # print(sorted_examples.head(n=100))

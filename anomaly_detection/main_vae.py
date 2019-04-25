@@ -1,9 +1,9 @@
-import vae_models
+import models
 from config import *
 
 # model = models.linear_VAE(input_size).to(device)
 nz = 5
-model = vae_models.conv_VAE(nz).to(device)
+model = models.conv_VAE(nz).to(device)
 print(model)
 optimizer = optim.Adam(model.parameters(), lr=args.lr)
 

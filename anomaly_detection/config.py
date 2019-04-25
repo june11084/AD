@@ -16,28 +16,31 @@ parser = argparse.ArgumentParser(description='Anomaly Detection')
 # path args
 parser.add_argument('train_path', type=str, metavar='TRAIN_PATH', help='load train data path')
 parser.add_argument('test_path', type=str, metavar='TEST_PATH', help='load test data path')
+parser.add_argument('--log_interval', type=int, default=10, help='print log interval (default: 10 epochs)')
+parser.add_argument('--analysis', type=str, default=None, help='doing analysis, plot, etc')
 
-parser.add_argument('--log_interval', type=int, default=10, metavar='N', help='print log interval (default: 10 epochs)')
 # training args
-parser.add_argument('--batch_size', type=int, default=16, metavar='N', help='input batch size for training (default: 16)')
-parser.add_argument('--epochs', type=int, default=10, metavar='N', help='number of epochs to train (default: 10)')
-parser.add_argument('--seed', type=int, default=1, metavar='N', help='random seed (default: 1)')
-parser.add_argument('--chunk_len', type=int, default=28, metavar='N', help='chunk length (default: 28 for 7 hours)')
-parser.add_argument('--stride', type=int, default=1, metavar='N', help='sliding window stride (default: 1)')
-parser.add_argument('--num_workers', type=int, default=6, metavar='N', help='number of dataloader workers (default: 6)')
-parser.add_argument('--lr', type=float, default=1e-3, metavar='F', help='learning rate (default: 1e-3)')
+parser.add_argument('--batch_size', type=int, default=16, help='input batch size for training (default: 16)')
+parser.add_argument('--epochs', type=int, default=10, help='number of epochs to train (default: 10)')
+parser.add_argument('--seed', type=int, default=1, help='random seed (default: 1)')
+parser.add_argument('--chunk_len', type=int, default=28, help='chunk length (default: 28 for 7 hours)')
+parser.add_argument('--stride', type=int, default=1, help='sliding window stride (default: 1)')
+parser.add_argument('--num_workers', type=int, default=6, help='number of dataloader workers (default: 6)')
+parser.add_argument('--lr', type=float, default=1e-3, help='learning rate (default: 1e-3)')
 
 # train or test
-parser.add_argument('--train', type=int, default=0, metavar='B', help='train mode, default=False')
-parser.add_argument('--dropout', type=int, default=0, metavar='B', help='whether applying dropout in the testing given trained model')
+parser.add_argument('--train', type=str, default=None, help='train mode: "train_teacher" -> train teacher model; "train_student" -> train student model with logvar output; "test" -> test or dropout test mode; "load" -> only load results; default = None, do nothing')
+parser.add_argument('--dropout', type=str, default=None, help='whether applying dropout in the testing given trained teacher model, default = no dropout')
+parser.add_argument('--build_std', type=str, default=None, help='build dataset with std, save to --custom_data')
+parser.add_argument('--custom_data', type=str, default=None, help='custom dataset path')
 
 # path args
-parser.add_argument('--check_path', type=str, default='./checkpoint/z.pk', metavar='C', help='save checkpoint path')
-parser.add_argument('--load_check', type=str, default='', metavar='C', help='load checkpoint path')
+parser.add_argument('--check_path', type=str, default='./checkpoint/z.pk', help='save checkpoint path')
+parser.add_argument('--load_check', type=str, default='', help='load checkpoint path')
 
 # attack args
-parser.add_argument('--attack_bound', type=float, default=1e-2, metavar='F', help='infty bound of attack (default: 0.01)')
-parser.add_argument('--attack_savepath', type=str, default='', metavar='C', help='attack save path')
+parser.add_argument('--attack_bound', type=float, default=1e-2, help='infty bound of attack (default: 0.01)')
+parser.add_argument('--attack_savepath', type=str, default='', help='attack save path')
 
 args = parser.parse_args()
 torch.manual_seed(args.seed)
