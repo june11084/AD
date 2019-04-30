@@ -50,6 +50,8 @@ def train_student(epoch):
 
 
 def test_student():
+    # batch_size needs to be 1
+    alpha = args.alpha
     model_student.eval()
     test_loss_total = []
     std_total = []
@@ -62,7 +64,7 @@ def test_student():
             y_pred, logvar = model_student(data_exclude)
             test_loss = loss_function(y_pred, data[:,:,-1]) + alpha*loss_function(logvar, target_logvar)
             test_loss_total.append(test_loss.item())
-            std_total.append(torch.sqrt(torch.exp(logvar)))
+            std_total.append(torch.sqrt(torch.exp(logvar)).item())
     return test_loss_total, std_total
 
 
@@ -169,7 +171,7 @@ if __name__ == "__main__":
         print('student: ', model_student)
         print("read dataset with std from", args.custom_data)
         trainset_with_std, testset_with_std = torch.load(args.custom_data)
-        test_loader = torch.utils.data.DataLoader(testset_with_std, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False)
+        test_loader = torch.utils.data.DataLoader(testset_with_std, batch_size=1, num_workers=args.num_workers, shuffle=False)
         test_loss, sample_std = test_student()
 
 
@@ -200,7 +202,7 @@ if __name__ == "__main__":
     # analysis and plot
     if args.analysis is not None:
         # perform cut
-        idx_anomaly, idx_normal = utils.cut(test_loss, 0.05)
+        idx_anomaly, idx_normal = utils.cut(test_loss, 0.005)
         # plot hist and detect positions
         utils.plot_hist(test_loss)
         utils.plot_detect(test_loss, data_test, idx_anomaly, sample_std)

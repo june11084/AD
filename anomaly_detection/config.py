@@ -37,6 +37,7 @@ parser.add_argument('--custom_data', type=str, default=None, help='custom datase
 
 # path args
 parser.add_argument('--check_path', type=str, default='./checkpoint/z.pk', help='save checkpoint path')
+parser.add_argument('--fig_path', type=str, default=None, help='save fig path')
 parser.add_argument('--load_check', type=str, default='', help='load checkpoint path')
 
 # attack args

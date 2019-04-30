@@ -26,7 +26,8 @@ def cut(test_loss, frac=0.05):
 def plot_hist(test_loss):
     # plot histogram
     plt.hist(test_loss, bins=100)
-    plt.show()
+    plt.savefig(args.fig_path+'loss_hist.pdf', format='pdf')
+    # plt.show()
 
 def plot_detect(test_loss, test_data, idx_anomaly, sample_var=None):
     # plot position
@@ -42,5 +43,6 @@ def plot_detect(test_loss, test_data, idx_anomaly, sample_var=None):
         ax1.plot(test_data, 'g')
         ax2.plot(y, 'r')
         ax3.plot(sample_var, 'b')
-    plt.show()
+    plt.savefig(args.fig_path+'detect.pdf', format='pdf')
+    # plt.show()
 
