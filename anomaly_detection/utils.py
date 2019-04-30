@@ -23,13 +23,15 @@ def cut(test_loss, frac=0.05):
     idx_normal = [i for i in range(len(test_loss)) if i not in idx_anomly]
     return idx_anomly, idx_normal
 
-def plot_hist(test_loss):
+def plot_hist(test_loss, fig_path=None):
     # plot histogram
     plt.hist(test_loss, bins=100)
-    plt.savefig(args.fig_path+'loss_hist.pdf', format='pdf')
-    # plt.show()
+    if fig_path is not None:
+        plt.savefig(fig_path+'loss_hist.pdf', format='pdf')
+    else:
+        plt.show()
 
-def plot_detect(test_loss, test_data, idx_anomaly, sample_var=None):
+def plot_detect(test_loss, test_data, idx_anomaly, sample_var=None, fig_path=None):
     # plot position
     y = np.zeros_like(test_data)
     y[list(map(lambda e: e+27, idx_anomaly))] = np.asarray(test_loss)[list(idx_anomaly)]
@@ -43,6 +45,9 @@ def plot_detect(test_loss, test_data, idx_anomaly, sample_var=None):
         ax1.plot(test_data, 'g')
         ax2.plot(y, 'r')
         ax3.plot(sample_var, 'b')
-    plt.savefig(args.fig_path+'detect.pdf', format='pdf')
-    # plt.show()
+
+    if fig_path is not None:
+        plt.savefig(fig_path+'detect.pdf', format='pdf')
+    else:
+        plt.show()
 

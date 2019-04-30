@@ -204,6 +204,6 @@ if __name__ == "__main__":
         # perform cut
         idx_anomaly, idx_normal = utils.cut(test_loss, 0.005)
         # plot hist and detect positions
-        utils.plot_hist(test_loss)
-        utils.plot_detect(test_loss, data_test, idx_anomaly, sample_std)
+        utils.plot_hist(test_loss, fig_path=args.fig_path)
+        utils.plot_detect(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
 
