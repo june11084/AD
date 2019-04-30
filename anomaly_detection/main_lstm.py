@@ -32,7 +32,7 @@ def train(epoch):
 def train_student(epoch):
     model_student.train()
     train_loss = 0
-    alpha = 0.01
+    alpha = args.alpha
     for batch_idx, (data, std) in enumerate(train_loader):
         data = data.to(device)
         data_exclude = data[:,:,:-output_dim] # exclude the last point
@@ -59,7 +59,7 @@ def test_student():
             data = data.to(device)
             data_exclude = data[:,:,:-output_dim]
             target_logvar = torch.log(std*std).to(device) # logvar = log(std^2)
-            y_pred, logvar = model(data_exclude)
+            y_pred, logvar = model_student(data_exclude)
             test_loss = loss_function(y_pred, data[:,:,-1]) + alpha*loss_function(logvar, target_logvar)
             test_loss_total.append(test_loss.item())
             std_total.append(torch.sqrt(torch.exp(logvar)))
@@ -69,7 +69,7 @@ def test_student():
 def test():
     model.eval()
     test_loss_total = []
-    print('start testing')
+    print('start testing student')
     with torch.no_grad():
         for i, (data,) in enumerate(test_loader):
             data = data.to(device)
@@ -158,7 +158,7 @@ if __name__ == "__main__":
             train_student(epoch)
             scheduler.step()
         epoch = 0
-        torch.save(model, args.check_path)
+        torch.save(model_student, args.check_path)
         print("finish training student, save model to "+args.check_path)
  
 
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         print("read dataset with std from", args.custom_data)
         trainset_with_std, testset_with_std = torch.load(args.custom_data)
         test_loader = torch.utils.data.DataLoader(testset_with_std, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False)
-        test_loss, sample_std = test_student(epoch)
+        test_loss, sample_std = test_student()
 
 
     else:

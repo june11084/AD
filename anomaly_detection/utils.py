@@ -23,7 +23,6 @@ def cut(test_loss, frac=0.05):
     idx_normal = [i for i in range(len(test_loss)) if i not in idx_anomly]
     return idx_anomly, idx_normal
 
-
 def plot_hist(test_loss):
     # plot histogram
     plt.hist(test_loss, bins=100)

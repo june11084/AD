@@ -27,9 +27,10 @@ parser.add_argument('--chunk_len', type=int, default=28, help='chunk length (def
 parser.add_argument('--stride', type=int, default=1, help='sliding window stride (default: 1)')
 parser.add_argument('--num_workers', type=int, default=6, help='number of dataloader workers (default: 6)')
 parser.add_argument('--lr', type=float, default=1e-3, help='learning rate (default: 1e-3)')
+parser.add_argument('--alpha', type=float, default=1e-2, help='regularizer coef (default=0.01)')
 
 # train or test
-parser.add_argument('--train', type=str, default=None, help='train mode: "train_teacher" -> train teacher model; "train_student" -> train student model with logvar output; "test" -> test or dropout test mode; "load" -> only load results; default = None, do nothing')
+parser.add_argument('--train', type=str, default=None, help='train mode: "train_teacher" -> train teacher model; "train_student" -> train student model with logvar output; "test_student" -> test student model; "test" -> test or dropout test for teacher model; "load" -> only load results; default = None, do nothing')
 parser.add_argument('--dropout', type=str, default=None, help='whether applying dropout in the testing given trained teacher model, default = no dropout')
 parser.add_argument('--build_std', type=str, default=None, help='build dataset with std, save to --custom_data')
 parser.add_argument('--custom_data', type=str, default=None, help='custom dataset path')
