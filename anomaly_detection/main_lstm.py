@@ -52,6 +52,7 @@ def train_student(epoch):
 def test_student():
     model_student.eval()
     test_loss_total = []
+    std_total = []
     print('start testing')
     with torch.no_grad():
         for i, (data, std) in enumerate(test_loader):
@@ -61,7 +62,8 @@ def test_student():
             y_pred, logvar = model(data_exclude)
             test_loss = loss_function(y_pred, data[:,:,-1]) + alpha*loss_function(logvar, target_logvar)
             test_loss_total.append(test_loss.item())
-    return test_loss_total
+            std_total.append(torch.sqrt(torch.exp(logvar)))
+    return test_loss_total, std_total
 
 
 def test():
@@ -168,7 +170,7 @@ if __name__ == "__main__":
         print("read dataset with std from", args.custom_data)
         trainset_with_std, testset_with_std = torch.load(args.custom_data)
         test_loader = torch.utils.data.DataLoader(testset_with_std, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False)
-        print(test_student(epoch))
+        test_loss, sample_std = test_student(epoch)
 
 
     else:
