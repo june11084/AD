@@ -1,13 +1,17 @@
 import models
 from config import *
 
+# hyper params
 lstm_input_size = args.chunk_len-1
 h1 = 20
 num_layers = 4
 learning_rate = 1e-3
+
+# build model
 model = models.LSTM(lstm_input_size, h1, batch_size=args.batch_size, output_dim=output_dim, num_layers=num_layers)
 model = model.to(device)
 
+# set loss func and optimizer
 loss_function = torch.nn.MSELoss(size_average=False)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
@@ -29,6 +33,20 @@ def train(epoch):
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / len(train_loader.dataset)))
 
+def test():
+    model.eval()
+    test_loss_total = []
+    print('start testing student')
+    with torch.no_grad():
+        for i, (data,) in enumerate(test_loader):
+            data = data.to(device)
+            data_exclude = data[:,:,:-output_dim]
+            y_pred = model(data_exclude)
+            test_loss = loss_function(y_pred, data[:,:,-1]).item()
+            test_loss_total.append(test_loss)
+    return test_loss_total
+
+# train the student model
 def train_student(epoch):
     model_student.train()
     train_loss = 0
@@ -48,7 +66,7 @@ def train_student(epoch):
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / len(train_loader.dataset)))
 
-
+# test the student model
 def test_student():
     # batch_size needs to be 1
     alpha = args.alpha
@@ -67,24 +85,12 @@ def test_student():
             std_total.append(torch.sqrt(torch.exp(logvar)).item())
     return test_loss_total, std_total
 
-
-def test():
-    model.eval()
-    test_loss_total = []
-    print('start testing student')
-    with torch.no_grad():
-        for i, (data,) in enumerate(test_loader):
-            data = data.to(device)
-            data_exclude = data[:,:,:-output_dim]
-            y_pred = model(data_exclude)
-            test_loss = loss_function(y_pred, data[:,:,-1]).item()
-            test_loss_total.append(test_loss)
-    return test_loss_total
-
+# apply dropout in testing
 def apply_dropout(m):
     if type(m) == nn.Dropout:
         m.train()
 
+# testing with dropout
 def test_dropout(dataloader):
     model.eval()
     model.apply(apply_dropout) # only making dropout layer in training mode
@@ -163,7 +169,8 @@ if __name__ == "__main__":
         torch.save(model_student, args.check_path)
         print("finish training student, save model to "+args.check_path)
  
-
+    
+    # test student model
     elif args.train == 'test_student':
         print("test the student model, read student from ", args.load_check)
         model_student = torch.load(args.load_check)
