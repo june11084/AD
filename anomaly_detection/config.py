@@ -32,7 +32,7 @@ parser.add_argument('--alpha', type=float, default=1e-2, help='regularizer coef 
 # train or test
 parser.add_argument('--train', type=str, default=None, help='train mode: "train_teacher" -> train teacher model; "train_student" -> train student model with logvar output; "test_student" -> test student model; "test" -> test or dropout test for teacher model; "load" -> only load results; default = None, do nothing')
 parser.add_argument('--dropout', type=str, default=None, help='whether applying dropout in the testing given trained teacher model, default = no dropout')
-parser.add_argument('--build_std', type=str, default=None, help='build dataset with std, save to --custom_data')
+parser.add_argument('--build_std', type=str, default=None, help='build dataset with std, save or load --custom_data')
 parser.add_argument('--custom_data', type=str, default=None, help='custom dataset path')
 
 # path args

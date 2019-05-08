@@ -1,8 +1,10 @@
 import models
 from config import *
 
-# model = models.linear_VAE(input_size).to(device)
+# hyper params
 nz = 5
+
+# build model and optimizer
 model = models.conv_VAE(nz).to(device)
 print(model)
 optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -41,7 +43,6 @@ def train(epoch):
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / len(train_loader.dataset)))
-
 
 def test():
     model.eval()
@@ -96,7 +97,8 @@ if __name__ == "__main__":
     plt.scatter(x_tsne[idx_normal,0], x_tsne[idx_normal,1], s=scale[idx_normal], c='g', alpha=0.8, edgecolors='none')
     plt.scatter(x_tsne[idx_anomly,0], x_tsne[idx_anomly,1], s=scale[idx_anomly], c='r', alpha=0.8, edgecolors='none')
     plt.legend(['Normal', 'Anomaly'])
-    plt.show()
+    if args.fig_path is not None: plt.savefig(fig_path+'vae_detect.pdf', format='pdf')
+    else: plt.show()
 
     # map data time
     idx_all = list(range(len(test_loss)))
@@ -117,6 +119,7 @@ if __name__ == "__main__":
     plt.scatter(x_tsne[idx_3,0], x_tsne[idx_3,1], s=scale[idx_3], c='y', alpha=0.8, edgecolors='none')
     plt.scatter(x_tsne[idx_4,0], x_tsne[idx_4,1], s=scale[idx_4], c='g', alpha=0.8, edgecolors='none')
     plt.legend(['0:00-6:00','6:00-12:00','12:00-18:00','18:00-24:00'], loc='upper right')
-    plt.show()
+    if args.fig_path is not None: plt.savefig(fig_path+'vae_time.pdf', format='pdf')
+    else: plt.show()
 
 

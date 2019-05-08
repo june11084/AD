@@ -73,7 +73,7 @@ def test_student():
     model_student.eval()
     test_loss_total = []
     std_total = []
-    print('start testing')
+    print('start testing student')
     with torch.no_grad():
         for i, (data, std) in enumerate(test_loader):
             data = data.to(device)
@@ -96,7 +96,7 @@ def test_dropout(dataloader):
     model.apply(apply_dropout) # only making dropout layer in training mode
     test_loss_total = []
     sample_std_total = []
-    print('start testing')
+    print('start testing with dropout')
     with torch.no_grad():
         for i, (data,) in enumerate(dataloader):
             if i % 100 == 0: print("finish testing "+str(i)+" chunks")
@@ -141,11 +141,11 @@ if __name__ == "__main__":
         print("finish testing, save model to "+args.check_path)
 
 
-    # only load results
-    elif args.train == 'load':
-        (test_loss, sample_std, model) = torch.load(args.load_check)
-        print(model)
-        print("finish loading model and loss from "+args.load_check)
+    # # only load results
+    # elif args.train == 'load':
+    #     (test_loss, sample_std, model) = torch.load(args.load_check)
+    #     print(model)
+    #     print("finish loading model and loss from "+args.load_check)
 
 
     # train student model
@@ -211,6 +211,7 @@ if __name__ == "__main__":
         # perform cut
         idx_anomaly, idx_normal = utils.cut(test_loss, 0.005)
         # plot hist and detect positions
-        utils.plot_hist(test_loss, fig_path=args.fig_path)
-        utils.plot_detect(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
+        # utils.plot_hist(test_loss, fig_path=args.fig_path)
+        # utils.plot_detect(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
+        utils.plot_level(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
 
