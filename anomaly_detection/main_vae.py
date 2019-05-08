@@ -86,7 +86,7 @@ if __name__ == "__main__":
     
     # plot hist and detect position
     utils.plot_hist(test_loss)
-    utils.plot_detect(data_test, idx_anomaly)
+    utils.plot_detect(test_loss, data_test, idx_anomaly)
 
     # get latent var
     scale = list(map(lambda e: np.reshape(e.mul(0.5).exp_().cpu().numpy(), (-1)), test_logvar)) # std = logvar.mul(0.5).exp_()
