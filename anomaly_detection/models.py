@@ -54,7 +54,7 @@ class conv_VAE(nn.Module):
     def __init__(self, nz):
         super(conv_VAE, self).__init__()
 
-        self.have_cuda = True
+        self.have_cuda = torch.cuda.is_available()
         self.nz = nz
 
         self.encoder = nn.Sequential(
