@@ -208,10 +208,16 @@ if __name__ == "__main__":
 
     # analysis and plot
     if args.analysis is not None:
-        # perform cut
-        idx_anomaly, idx_normal = utils.cut(test_loss, 0.005)
-        # plot hist and detect positions
+        # # perform cut
+        # idx_anomaly, idx_normal = utils.cut(test_loss, 0.005)
+
+        # # plot hist and detect positions
         # utils.plot_hist(test_loss, fig_path=args.fig_path)
         # utils.plot_detect(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
-        utils.plot_level(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
+        # utils.plot_level(test_loss, data_test, idx_anomaly, sample_std, fig_path=args.fig_path)
+
+        # scale sample std and save
+        from sklearn.preprocessing import minmax_scale
+        s = minmax_scale(np.asarray(sample_std)) + 1e-3
+        torch.save((test_loss, s), args.results_path+'test.results')
 

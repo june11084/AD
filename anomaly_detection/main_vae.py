@@ -76,50 +76,55 @@ if __name__ == "__main__":
         test_loss, test_mu, test_logvar = test()
         x = np.array(list(map(lambda e: np.reshape(e.cpu().numpy(), (-1)), test_mu)))
         x_tsne = TSNE(n_components=2).fit_transform(x)
-        torch.save((test_loss, test_mu, test_logvar, x_tsne), args.check_path)
+        torch.save((test_loss, test_mu, test_logvar, x_tsne), args.results_path+'test.results')
+        torch.save(model, args.check_path)
 
     else:
         (test_loss, test_mu, test_logvar, x_tsne) = torch.load(args.load_check)
 
-    # perform cut
-    idx_anomaly, idx_normal = utils.cut(test_loss, 0.05)
-    
-    # plot hist and detect position
-    utils.plot_hist(test_loss)
-    utils.plot_detect(test_loss, data_test, idx_anomaly)
+    if args.analysis is not None:
 
-    # get latent var
-    scale = list(map(lambda e: np.reshape(e.mul(0.5).exp_().cpu().numpy(), (-1)), test_logvar)) # std = logvar.mul(0.5).exp_()
-    scale = np.array(list(map(np.linalg.norm, scale)))
-    scale = (scale - min(scale))/np.std(scale) ** 1.2
+        if args.fig_path is not None:
+            # perform cut
+            idx_anomaly, idx_normal = utils.cut(test_loss, 0.05)
+            
+            # plot hist and detect position
+            utils.plot_hist(test_loss)
+            utils.plot_detect(test_loss, data_test, idx_anomaly)
 
-    # plot normal vs anomaly
-    plt.scatter(x_tsne[idx_normal,0], x_tsne[idx_normal,1], s=scale[idx_normal], c='g', alpha=0.8, edgecolors='none')
-    plt.scatter(x_tsne[idx_anomly,0], x_tsne[idx_anomly,1], s=scale[idx_anomly], c='r', alpha=0.8, edgecolors='none')
-    plt.legend(['Normal', 'Anomaly'])
-    if args.fig_path is not None: plt.savefig(fig_path+'vae_detect.pdf', format='pdf')
-    else: plt.show()
+            # get latent var
+            scale = list(map(lambda e: np.reshape(e.mul(0.5).exp_().cpu().numpy(), (-1)), test_logvar)) # std = logvar.mul(0.5).exp_()
+            scale = np.array(list(map(np.linalg.norm, scale)))
+            scale = (scale - min(scale))/np.std(scale) ** 1.2
 
-    # map data time
-    idx_all = list(range(len(test_loss)))
-    idx_1 = idx_all[0:24]
-    idx_2 = idx_all[24:48]
-    idx_3 = idx_all[48:72]
-    idx_4 = idx_all[72:96]
-    k = 96
-    while k+96 < len(idx_all):
-        idx_1 += idx_all[k:k+24]
-        idx_2 += idx_all[k+24:k+48]
-        idx_3 += idx_all[k+48:k+72]
-        idx_4 += idx_all[k+72:k+96]
-        k += 96
+            # plot normal vs anomaly
+            plt.scatter(x_tsne[idx_normal,0], x_tsne[idx_normal,1], s=scale[idx_normal], c='g', alpha=0.8, edgecolors='none')
+            plt.scatter(x_tsne[idx_anomly,0], x_tsne[idx_anomly,1], s=scale[idx_anomly], c='r', alpha=0.8, edgecolors='none')
+            plt.legend(['Normal', 'Anomaly'])
+            if args.fig_path is not None: plt.savefig(fig_path+'vae_detect.pdf', format='pdf')
+            else: plt.show()
 
-    plt.scatter(x_tsne[idx_1,0], x_tsne[idx_1,1], s=scale[idx_1], c='b', alpha=0.8, edgecolors='none')
-    plt.scatter(x_tsne[idx_2,0], x_tsne[idx_2,1], s=scale[idx_2], c='r', alpha=0.8, edgecolors='none')
-    plt.scatter(x_tsne[idx_3,0], x_tsne[idx_3,1], s=scale[idx_3], c='y', alpha=0.8, edgecolors='none')
-    plt.scatter(x_tsne[idx_4,0], x_tsne[idx_4,1], s=scale[idx_4], c='g', alpha=0.8, edgecolors='none')
-    plt.legend(['0:00-6:00','6:00-12:00','12:00-18:00','18:00-24:00'], loc='upper right')
-    if args.fig_path is not None: plt.savefig(fig_path+'vae_time.pdf', format='pdf')
-    else: plt.show()
+            # map data time
+            idx_all = list(range(len(test_loss)))
+            idx_1 = idx_all[0:24]
+            idx_2 = idx_all[24:48]
+            idx_3 = idx_all[48:72]
+            idx_4 = idx_all[72:96]
+            k = 96
+            while k+96 < len(idx_all):
+                idx_1 += idx_all[k:k+24]
+                idx_2 += idx_all[k+24:k+48]
+                idx_3 += idx_all[k+48:k+72]
+                idx_4 += idx_all[k+72:k+96]
+                k += 96
+
+            plt.scatter(x_tsne[idx_1,0], x_tsne[idx_1,1], s=scale[idx_1], c='b', alpha=0.8, edgecolors='none')
+            plt.scatter(x_tsne[idx_2,0], x_tsne[idx_2,1], s=scale[idx_2], c='r', alpha=0.8, edgecolors='none')
+            plt.scatter(x_tsne[idx_3,0], x_tsne[idx_3,1], s=scale[idx_3], c='y', alpha=0.8, edgecolors='none')
+            plt.scatter(x_tsne[idx_4,0], x_tsne[idx_4,1], s=scale[idx_4], c='g', alpha=0.8, edgecolors='none')
+            plt.legend(['0:00-6:00','6:00-12:00','12:00-18:00','18:00-24:00'], loc='upper right')
+            if args.fig_path is not None: plt.savefig(fig_path+'vae_time.pdf', format='pdf')
+            else: plt.show()
+
 
 
